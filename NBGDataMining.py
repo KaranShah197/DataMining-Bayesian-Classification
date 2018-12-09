@@ -4,9 +4,10 @@ import matplotlib.pyplot as plt
 import time
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import GaussianNB, BernoulliNB, MultinomialNB
+from sklearn.metrics import confusion_matrix
 
 # Importing dataset
-data = pd.read_csv("~/Desktop/bankdataCD.csv", encoding='utf-8')
+data = pd.read_csv("bankdataCD.csv", encoding='utf-8')
 
 
 
@@ -113,3 +114,6 @@ print("Number of mislabeled points out of a total {} points : {}, performance {:
           (X_test["y_cleaned"] != y_pred).sum(),
           100*(1-(X_test["y_cleaned"] != y_pred).sum()/X_test.shape[0])
 ))
+
+tn, fp, fn, tp = confusion_matrix(X_test['y_cleaned'], y_pred).ravel()
+print(tn,fp,fn,tp)
