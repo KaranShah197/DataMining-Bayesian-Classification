@@ -11,7 +11,7 @@ from sklearn.utils import resample
 data = pd.read_csv("bankdataCD.csv", encoding = 'utf-8')
 
 #CLEAN DATA
-#converts marital status descriptions - married =1 single = 0
+#converts marital status descriptions - married = 1 single = 0
 data["marital_cleaned"] = np.where(data["marital"] == "single", 0, 1)
 
 #converts loan, default, housing status descriptions - yes =1 no = 0
@@ -110,28 +110,11 @@ used_features = [
 ]
 
 # Train classifier
-gnb.fit(X_train[used_features].values, X_train["y_cleaned"] )
-y_pred = gnb.predict(X_test[used_features] )
-
-# Print results
-print("Number of mislabeled points out of a total {} points : {}, performance {:05.2f}%"
-      .format(
-          X_test.shape[0], # Total number of test_data
-          (X_test["y_cleaned"] != y_pred).sum(), # Total number of misslabled data
-          100*(1-(X_test["y_cleaned"] != y_pred).sum()/X_test.shape[0]) # Accuracy
-))
-
-tn, fp, fn, tp = confusion_matrix(X_test['y_cleaned'], y_pred).ravel()
-print('tn: {}, fp: {}\nfn: {}, tp: {}'.format(tn,fp,fn,tp))
-
-print('Populated result')
-# Train classifier
-gnb.fit(
-    populatedData[used_features].values,
-    populatedData["y_cleaned"]
-)
+gnb.fit(populatedData[used_features].values, populatedData["y_cleaned"] )
 y_pred = gnb.predict(X_test[used_features])
 
+print('Populated result')
+
 print("Number of mislabeled points out of a total {} points : {}, performance {:05.2f}%"
       .format(
           X_test.shape[0], # Total number of test_data
@@ -140,4 +123,4 @@ print("Number of mislabeled points out of a total {} points : {}, performance {:
 ))
 
 tn, fp, fn, tp = confusion_matrix(X_test['y_cleaned'], y_pred).ravel()
-print('tn: {}, fp: {}\nfn: {}, tp: {}'.format(tn,fp,fn,tp))
+print('tn: {}, fp: {}\nfn: {}, tp: {}'.format(tn, fp, fn, tp))
