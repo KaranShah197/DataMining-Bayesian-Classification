@@ -1,0 +1,6 @@
+1) This Folder contains .py files of 3 programs
+2) Original Dataset
+3) Cleansed Data set used for analysis
+4) For Python files, important to define folder path of dataset to be used. (Note this program is designed to only work with BankCD dataset)
+	-Install following packages; pandas, numpy, matplotlib, scikit-learn
+5) Run programs to achieve results
