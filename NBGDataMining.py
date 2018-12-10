@@ -5,93 +5,93 @@ import time
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import GaussianNB, BernoulliNB, MultinomialNB
 
+
 # Importing dataset
-data = pd.read_csv("~/Desktop/bankdataCD.csv", encoding='utf-8')
-
-
+data = pd.read_csv("bankdataCD.csv", encoding = 'utf-8')
 
 #CLEAN DATA
 #converts marital status descriptions - married =1 single = 0
-data["marital_cleaned"]=np.where(data["marital"]=="single",0,1)
-
+data["marital_cleaned"] = np.where(data["marital"] == "single", 0, 1)
 
 #converts loan, default, housing status descriptions - yes =1 no = 0
 
-data["default_cleaned"]=np.where(data["default"]=="no",0,1)
-
-data["housing_cleaned"]=np.where(data["housing"]=="no",0,1)
-
-data["loan_cleaned"]=np.where(data["loan"]=="no",0,1)
-
-
+data["default_cleaned"]=np.where(data["default"] == "no", 0, 1)
+data["housing_cleaned"]=np.where(data["housing"] == "no", 0, 1)
+data["loan_cleaned"]=np.where(data["loan"]=="no", 0, 1)
 
 #converts education description | unknown =0, | primary=1 | secondary =2 | teritiary =4 | anything else =5
-data["education_cleaned"]=np.where(data["education"]=="unknown",0,
-                                  np.where(data["education"]=="primary",1,
-                                           np.where(data["education"]=="secondary",2,
-                                                np.where(data["education"]=="tertiary",3,4)
-                                                )
-                                          )
-                                 )
+data["education_cleaned"] = np.where(data["education"] == "unknown", 0,
+                                np.where(data["education"] == "primary", 1,
+                                    np.where(data["education"] == "secondary", 2,
+                                        np.where(data["education"] == "tertiary", 3, 4)
+                                    )
+                                )
+                            )
 
 #converts job description into numerical values
-data["job_cleaned"]=np.where(data["job"]=="unknown",0,
-                                  np.where(data["job"]=="technician",1,
-                                           np.where(data["job"]=="entrepreneur",2,
-                                                np.where(data["job"]=="blue-collar",3,
-                                                    np.where(data["job"]=="management",4,
-                                                          np.where(data["job"]=="retired",5,
-                                                                np.where(data["job"]=="admin.",6,
-                                                                    np.where(data["job"]=="services",7,
-                                                                        np.where(data["job"]=="self-employed",8,
-                                                                              np.where(data["job"]=="unemployed",9,
-                                                                                       np.where(data["job"] == "housemaid",10,
-                                                                                                np.where(data["job"] == "student",11,12)
-                                                ))))))))
-                                          )
-                                 ))
-
+data["job_cleaned"] = np.where(data["job"] == "unknown", 0,
+                        np.where(data["job"] == "technician", 1,
+                            np.where(data["job"] == "entrepreneur", 2,
+                                np.where(data["job"] == "blue-collar", 3,
+                                    np.where(data["job"] == "management", 4,
+                                        np.where(data["job"] == "retired", 5,
+                                            np.where(data["job"] == "admin.", 6,
+                                                np.where(data["job"] == "services", 7,
+                                                    np.where(data["job"] == "self-employed", 8,
+                                                        np.where(data["job"] == "unemployed", 9,
+                                                            np.where(data["job"] == "housemaid", 10,
+                                                                np.where(data["job"] == "student", 11, 12)
+                                                            )
+                                                        )
+                                                    )
+                                                )
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                      )
 
 #converts poutcome description | failure =0, | success=1 | unknown=2 | anything else =3
-data["poutcome_cleaned"]=np.where(data["poutcome"]=="unknown",0,
-                                  np.where(data["poutcome"]=="success",1,
-                                           np.where(data["poutcome"]=="unknown",2,3)
+data["poutcome_cleaned"] = np.where(data["poutcome"] == "unknown", 0,
+                            np.where(data["poutcome"] == "success", 1,
+                                np.where(data["poutcome"] == "unknown", 2, 3)
+                            )
+                           )
 
-                                          )
-                                 )
-
-data["y_cleaned"]=np.where(data["y"]=="no",0,1)
-
+data["y_cleaned"] = np.where(data["y"] == "no", 0, 1)
 
 # Cleansed dataset of bankCD
-data=data[[
-    "age",
-    "job_cleaned",
-    "marital_cleaned",
-    "education_cleaned",
-    "default_cleaned",
-    "balance",
-    "housing_cleaned",
-    "loan_cleaned",
-    "contact",
-    "day",
-    "month",
-    "duration",
-    "campaign",
-    "pdays",
-    "previous",
-    "poutcome_cleaned",
-    "y_cleaned"
-]].dropna(axis=0, how='any')
+data = data[
+    [
+        "age",
+        "job_cleaned",
+        "marital_cleaned",
+        "education_cleaned",
+        "default_cleaned",
+        "balance",
+        "housing_cleaned",
+        "loan_cleaned",
+        "contact",
+        "day",
+        "month",
+        "duration",
+        "campaign",
+        "pdays",
+        "previous",
+        "poutcome_cleaned",
+        "y_cleaned"
+    ]
+].dropna(axis = 0, how = 'any')
 
 #data.to_csv(r'~/Desktop/NBGMining.csv', index=None, sep=',', mode='a')
-
 # Split dataset in training and test datasets
-X_train, X_test = train_test_split(data, test_size=0.5, random_state=int(time.time()))
+X_train, X_test = train_test_split(data, test_size=0.5, random_state=int(time.time() ))
 
 # Instantiate the classifier
 gnb = GaussianNB()
-used_features =[
+used_features = [
     "age",
     "job_cleaned",
     "marital_cleaned",
@@ -100,16 +100,14 @@ used_features =[
 ]
 
 # Train classifier
-gnb.fit(
-    X_train[used_features].values,
-    X_train["y_cleaned"]
-)
-y_pred = gnb.predict(X_test[used_features])
+gnb.fit(X_train[used_features].values, X_train["y_cleaned"] )
+y_pred = gnb.predict(X_test[used_features] )
 
 # Print results
 print("Number of mislabeled points out of a total {} points : {}, performance {:05.2f}%"
-      .format(
+    .format(
           X_test.shape[0],
           (X_test["y_cleaned"] != y_pred).sum(),
           100*(1-(X_test["y_cleaned"] != y_pred).sum()/X_test.shape[0])
-))
+    )
+)
