@@ -5,6 +5,7 @@ import time
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import GaussianNB, BernoulliNB, MultinomialNB
 from sklearn.metrics import confusion_matrix
+from sklearn.utils import resample
 
 # Importing dataset
 data = pd.read_csv("bankdataCD.csv", encoding='utf-8')
@@ -88,7 +89,15 @@ data=data[[
 #data.to_csv(r'~/Desktop/NBGMining.csv', index=None, sep=',', mode='a')
 
 # Split dataset in training and test datasets
-X_train, X_test = train_test_split(data, test_size=0.5, random_state=int(time.time()))
+X_train, X_test = train_test_split(data, test_size=0.3, random_state=int(time.time()))
+
+# Up sample true cases
+print(X_train['y_cleaned'].value_counts())
+data_y = X_train[X_train['y_cleaned']==1]
+data_n = X_train[X_train['y_cleaned']==0]
+data_y_upsampled = resample(data_y, replace=True,n_samples=27948,random_state=123)
+populatedData = pd.concat([data_n,data_y_upsampled])
+print(populatedData['y_cleaned'].value_counts())
 
 # Instantiate the classifier
 gnb = GaussianNB()
@@ -97,7 +106,8 @@ used_features =[
     "job_cleaned",
     "marital_cleaned",
     "education_cleaned",
-    "default_cleaned"
+    "default_cleaned",
+    "balance"
 ]
 
 # Train classifier
@@ -110,9 +120,27 @@ y_pred = gnb.predict(X_test[used_features])
 # Print results
 print("Number of mislabeled points out of a total {} points : {}, performance {:05.2f}%"
       .format(
-          X_test.shape[0],
-          (X_test["y_cleaned"] != y_pred).sum(),
-          100*(1-(X_test["y_cleaned"] != y_pred).sum()/X_test.shape[0])
+          X_test.shape[0], # Total number of test_data
+          (X_test["y_cleaned"] != y_pred).sum(), # Total number of misslabled data
+          100*(1-(X_test["y_cleaned"] != y_pred).sum()/X_test.shape[0]) # Accuracy
+))
+
+tn, fp, fn, tp = confusion_matrix(X_test['y_cleaned'], y_pred).ravel()
+print(tn,fp,fn,tp)
+
+print('Populated result')
+# Train classifier
+gnb.fit(
+    populatedData[used_features].values,
+    populatedData["y_cleaned"]
+)
+y_pred = gnb.predict(X_test[used_features])
+
+print("Number of mislabeled points out of a total {} points : {}, performance {:05.2f}%"
+      .format(
+          X_test.shape[0], # Total number of test_data
+          (X_test["y_cleaned"] != y_pred).sum(), # Total number of misslabled data
+          100*(1-(X_test["y_cleaned"] != y_pred).sum()/X_test.shape[0]) # Accuracy
 ))
 
 tn, fp, fn, tp = confusion_matrix(X_test['y_cleaned'], y_pred).ravel()
