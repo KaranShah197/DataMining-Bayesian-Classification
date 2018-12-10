@@ -126,7 +126,7 @@ print("Number of mislabeled points out of a total {} points : {}, performance {:
 ))
 
 tn, fp, fn, tp = confusion_matrix(X_test['y_cleaned'], y_pred).ravel()
-print(tn,fp,fn,tp)
+print('tn: {}, fp: {}\nfn: {}, tp: {}'.format(tn,fp,fn,tp))
 
 print('Populated result')
 # Train classifier
@@ -144,4 +144,4 @@ print("Number of mislabeled points out of a total {} points : {}, performance {:
 ))
 
 tn, fp, fn, tp = confusion_matrix(X_test['y_cleaned'], y_pred).ravel()
-print(tn,fp,fn,tp)
+print('tn: {}, fp: {}\nfn: {}, tp: {}'.format(tn,fp,fn,tp))
