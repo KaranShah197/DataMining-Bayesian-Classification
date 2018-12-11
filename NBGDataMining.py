@@ -95,7 +95,12 @@ X_train, X_test = train_test_split(data, test_size = 0.3, random_state = int(tim
 print(X_train['y_cleaned'].value_counts())
 data_y = X_train[X_train['y_cleaned']==1]
 data_n = X_train[X_train['y_cleaned']==0]
-data_y_upsampled = resample(data_y, replace=True,n_samples=27948,random_state=123)
+upsampleNumber = int(len(data_n))
+data_y_upsampled = resample(
+                    data_y, 
+                    replace=True,
+                    n_samples=upsampleNumber,
+                    random_state=123)
 populatedData = pd.concat([data_n,data_y_upsampled])
 print(populatedData['y_cleaned'].value_counts())
 
