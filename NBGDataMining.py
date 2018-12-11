@@ -86,7 +86,8 @@ data = data[
     ]
 ].dropna(axis = 0, how = 'any')
 
-#data.to_csv(r'~/Desktop/NBGMining.csv', index=None, sep=',', mode='a')
+#data.to_csv(r'~/Desktop/NBGMining2.csv', index=None, sep=',', mode='a')
+
 # Split dataset in training and test datasets
 X_train, X_test = train_test_split(data, test_size = 0.3, random_state = int(time.time()))
 
