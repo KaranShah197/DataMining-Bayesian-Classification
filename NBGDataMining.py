@@ -92,6 +92,7 @@ data=data[[
 X_train, X_test = train_test_split(data, test_size=0.3, random_state=int(time.time()))
 
 # Up sample true cases
+print('Rows of result use to train, 0=NotSub 1=Subscirbed')
 print(X_train['y_cleaned'].value_counts())
 data_y = X_train[X_train['y_cleaned']==1]
 data_n = X_train[X_train['y_cleaned']==0]
@@ -102,7 +103,6 @@ data_y_upsampled = resample(
                     n_samples=upsampleNumber,
                     random_state=123)
 populatedData = pd.concat([data_n,data_y_upsampled])
-print(populatedData['y_cleaned'].value_counts())
 
 # Instantiate the classifier
 gnb = GaussianNB()
@@ -133,7 +133,10 @@ print("Number of mislabeled points out of a total {} points : {}, performance {:
 tn, fp, fn, tp = confusion_matrix(X_test['y_cleaned'], y_pred).ravel()
 print('tn: {}, fp: {}\nfn: {}, tp: {}'.format(tn,fp,fn,tp))
 
+print()
 print('Populated result')
+print('Rows of result use to train, 0=NotSub 1=Subscirbed')
+print(populatedData['y_cleaned'].value_counts())
 # Train classifier
 gnb.fit(
     populatedData[used_features].values,
