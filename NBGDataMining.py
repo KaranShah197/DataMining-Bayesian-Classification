@@ -95,7 +95,7 @@ X_train, X_test = train_test_split(data, test_size=0.3, random_state=int(time.ti
 print(X_train['y_cleaned'].value_counts())
 data_y = X_train[X_train['y_cleaned']==1]
 data_n = X_train[X_train['y_cleaned']==0]
-upsampleNumber = int(len(data_n))
+upsampleNumber = int(len(data_n)/2)
 data_y_upsampled = resample(
                     data_y, 
                     replace=True,
