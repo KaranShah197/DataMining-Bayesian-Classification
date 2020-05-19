@@ -2,15 +2,14 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import time
+
+from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import GaussianNB, BernoulliNB, MultinomialNB
-from sklearn.metrics import confusion_matrix
 from sklearn.utils import resample
 
 # Importing dataset
 data = pd.read_csv("bankdataCD.csv", encoding='utf-8')
-
-
 
 #CLEAN DATA
 #converts marital status descriptions - married =1 single = 0
@@ -19,54 +18,45 @@ data["marital_cleaned"]=np.where(data["marital"]=="single",0,1)
 
 #converts loan, default, housing status descriptions - yes =1 no = 0
 
-data["default_cleaned"]=np.where(data["default"]=="no",0,1)
-
-data["housing_cleaned"]=np.where(data["housing"]=="no",0,1)
-
-data["loan_cleaned"]=np.where(data["loan"]=="no",0,1)
-
-
+data["default_cleaned"] = np.where(data["default"] == "no", 0, 1)
+data["housing_cleaned"] = np.where(data["housing"] == "no", 0, 1)
+data["loan_cleaned"]    = np.where(data["loan"] == "no", 0, 1)
 
 #converts education description | unknown =0, | primary=1 | secondary =2 | teritiary =4 | anything else =5
-data["education_cleaned"]=np.where(data["education"]=="unknown",0,
-                                  np.where(data["education"]=="primary",1,
-                                           np.where(data["education"]=="secondary",2,
-                                                np.where(data["education"]=="tertiary",3,4)
-                                                )
-                                          )
-                                 )
+data["education_cleaned"] = np.where(data["education"] == "unknown", 0,
+                                np.where(data["education"] == "primary", 1,
+                                    np.where(data["education"] == "secondary", 2,
+                                        np.where(data["education"] == "tertiary", 3, 4)
+                                    )
+                                )
+                             )
 
 #converts job description into numerical values
-data["job_cleaned"]=np.where(data["job"]=="unknown",0,
-                                  np.where(data["job"]=="technician",1,
-                                           np.where(data["job"]=="entrepreneur",2,
-                                                np.where(data["job"]=="blue-collar",3,
-                                                    np.where(data["job"]=="management",4,
-                                                          np.where(data["job"]=="retired",5,
-                                                                np.where(data["job"]=="admin.",6,
-                                                                    np.where(data["job"]=="services",7,
-                                                                        np.where(data["job"]=="self-employed",8,
-                                                                              np.where(data["job"]=="unemployed",9,
-                                                                                       np.where(data["job"] == "housemaid",10,
-                                                                                                np.where(data["job"] == "student",11,12)
-                                                ))))))))
-                                          )
-                                 ))
-
+data["job_cleaned"] = np.where(data["job"] == "unknown", 0,
+                            np.where(data["job"] == "technician", 1,
+                                np.where(data["job"] == "entrepreneur", 2,
+                                    np.where(data["job"] == "blue-collar", 3,
+                                        np.where(data["job"] == "management", 4,
+                                            np.where(data["job"] == "retired", 5,
+                                                np.where(data["job"] == "admin.", 6,
+                                                    np.where(data["job"] == "services", 7,
+                                                        np.where(data["job"] == "self-employed", 8,
+                                                            np.where(data["job"] == "unemployed", 9,
+                                                                np.where(data["job"] == "housemaid", 10,
+                                                                    np.where(data["job"] == "student", 11, 12)
+                            )))))))))))
 
 #converts poutcome description | failure =0, | success=1 | unknown=2 | anything else =3
-data["poutcome_cleaned"]=np.where(data["poutcome"]=="unknown",0,
-                                  np.where(data["poutcome"]=="success",1,
-                                           np.where(data["poutcome"]=="unknown",2,3)
+data["poutcome_cleaned"] = np.where(data["poutcome"] == "unknown", 0,
+                                np.where(data["poutcome"] == "success", 1,
+                                    np.where(data["poutcome"] == "unknown", 2, 3)
+                                )
+                           )
 
-                                          )
-                                 )
-
-data["y_cleaned"]=np.where(data["y"]=="no",0,1)
-
+data["y_cleaned"] = np.where(data["y"] == "no", 0, 1)
 
 # Cleansed dataset of bankCD
-data=data[[
+data = data[[
     "age",
     "job_cleaned",
     "marital_cleaned",
@@ -89,24 +79,20 @@ data=data[[
 #data.to_csv(r'~/Desktop/NBGMining.csv', index=None, sep=',', mode='a')
 
 # Split dataset in training and test datasets
-X_train, X_test = train_test_split(data, test_size=0.3, random_state=int(time.time()))
+X_train, X_test = train_test_split(data, test_size = 0.3, random_state = int(time.time()))
 
 # Up sample true cases
 print('Rows of result use to train, 0=NotSub 1=Subscirbed')
 print(X_train['y_cleaned'].value_counts())
-data_y = X_train[X_train['y_cleaned']==1]
-data_n = X_train[X_train['y_cleaned']==0]
-upsampleNumber = int(len(data_n)/2)
-data_y_upsampled = resample(
-                    data_y, 
-                    replace=True,
-                    n_samples=upsampleNumber,
-                    random_state=123)
-populatedData = pd.concat([data_n,data_y_upsampled])
+data_y = X_train[X_train['y_cleaned'] == 1]
+data_n = X_train[X_train['y_cleaned'] == 0]
+upsampleNumber      = int(len(data_n)/2)
+data_y_upsampled    = resample( data_y, replace = True, n_samples = upsampleNumber, random_state = 123)
+populatedData       = pd.concat([data_n,data_y_upsampled])
 
 # Instantiate the classifier
 gnb = GaussianNB()
-used_features =[
+used_features = [
     "age",
     "job_cleaned",
     "marital_cleaned",
